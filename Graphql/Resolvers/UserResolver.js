@@ -1,7 +1,10 @@
 const User = require("../../Models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { UserValidation } = require("../../Utils/UserValidtaion");
+const {
+  UserValidation,
+  UserLoginValidation,
+} = require("../../Utils/UserValidtaion");
 const { UserInputError } = require("apollo-server");
 module.exports = {
   Mutation: {
@@ -50,6 +53,25 @@ module.exports = {
       return {
         ...res._doc,
         token,
+      };
+    },
+    async loginUser(_, { loginInput: { username, password, email } }) {
+      const { errors, isValid } = UserLoginValidation(
+        username,
+        password,
+        email
+      );
+      if (!isValid) {
+        throw new UserInputError("Erorrs", { errors });
+      }
+      const user = await User.findOne({ username });
+      if (!user) {
+        throw new UserInputError("No User Exists");
+      }
+      return {
+        email: user.email,
+        createdAt: user.createdAt,
+        id: user._id,
       };
     },
   },
