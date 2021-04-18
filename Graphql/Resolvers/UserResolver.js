@@ -6,17 +6,37 @@ const {
   UserLoginValidation,
 } = require("../../Utils/UserValidtaion");
 const { UserInputError } = require("apollo-server");
+
+const generateToken = (res) => {
+  return jwt.sign(
+    {
+      id: res.id,
+      email: res.email,
+      username: res.username,
+    },
+    "SimpleJWTTOKEN",
+    {
+      expiresIn: "30min",
+    }
+  );
+};
+
 module.exports = {
   Mutation: {
     async register(
       _,
       { registerInput: { username, password, confirmPassword, email } }
     ) {
+      if (password === confirmPassword) {
+        console.log(true);
+        console.log(email);
+      }
+
       const { errors, isValid } = UserValidation(
         username,
+        email,
         password,
-        confirmPassword,
-        email
+        confirmPassword
       );
       if (!isValid) {
         throw new UserInputError("Erorrs", { errors });
@@ -39,17 +59,7 @@ module.exports = {
       });
       console.log("newUser===>", newUser);
       const res = await newUser.save();
-      const token = jwt.sign(
-        {
-          id: res.id,
-          email: res.email,
-          username: res.username,
-        },
-        "SimpleJWTTOKEN",
-        {
-          expiresIn: "30min",
-        }
-      );
+      const token = generateToken(res);
       return {
         ...res._doc,
         token,
@@ -64,14 +74,20 @@ module.exports = {
       if (!isValid) {
         throw new UserInputError("Erorrs", { errors });
       }
-      const user = await User.findOne({ username });
-      if (!user) {
+      const res = await User.findOne({ username });
+      if (!res) {
         throw new UserInputError("No User Exists");
       }
+      const matchPassword = await bcrypt.compare(password, res.password);
+      if (!matchPassword) {
+        throw new Error("Incorect Password");
+      }
+      const token = generateToken(res);
       return {
-        email: user.email,
-        createdAt: user.createdAt,
-        id: user._id,
+        email: res.email,
+        createdAt: res.createdAt,
+        id: res._id,
+        token: token,
       };
     },
   },
