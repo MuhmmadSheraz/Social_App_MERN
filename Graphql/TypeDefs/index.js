@@ -7,10 +7,16 @@ module.exports = gql`
     createdAt: String!
     username: String!
     comments: [Comment]!
+    likes: [Like]!
   }
   type Comment {
     id: ID!
     body: String!
+    createdAt: String!
+    username: String!
+  }
+  type Like {
+    id: ID!
     createdAt: String!
     username: String!
   }
@@ -40,6 +46,11 @@ module.exports = gql`
     createPost(body: String!): Post!
     deletePost(id: ID!): String!
     addComment(body: String!, postId: ID!): Post!
-    deleteComment(postId: String!, commentId: String!, username: String!): String!
+    deleteComment(
+      postId: String!
+      commentId: String!
+      username: String!
+    ): String!
+    likeToggle(postId: String!, username: String!): Post!
   }
 `;
