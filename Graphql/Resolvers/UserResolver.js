@@ -16,7 +16,7 @@ const generateToken = (res) => {
     },
     "SimpleJWTTOKEN",
     {
-      expiresIn: "30min",
+      expiresIn: "1h",
     }
   );
 };
