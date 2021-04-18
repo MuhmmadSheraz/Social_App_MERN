@@ -15,6 +15,6 @@ module.exports = (context) => {
       }
     }
   } else {
-    throw new AuthenticationError("AuthHeader Not Found");
+    throw new Error("AuthHeader Not Found");
   }
 };

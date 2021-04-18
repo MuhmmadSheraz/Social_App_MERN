@@ -4,7 +4,7 @@ module.exports.UserValidation = (
   password,
   confirmPassword
 ) => {
-  console.log(password, confirmPassword ,email);
+  console.log(password, confirmPassword ,email,userName);
   const errors = {};
   if (!userName || !password || !confirmPassword || !email) {
     errors.userName = "Please Fill The Required Feild";
