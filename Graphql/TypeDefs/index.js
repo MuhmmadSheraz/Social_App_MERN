@@ -53,4 +53,7 @@ module.exports = gql`
     ): String!
     likeToggle(postId: String!, username: String!): Post!
   }
+  type Subscription {
+    realTimePost: Post!
+  }
 `;

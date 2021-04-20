@@ -13,4 +13,7 @@ module.exports = {
     ...CommentResolver.Mutation,
     ...LikeResolver.Mutation,
   },
+  Subscription: {
+    ...PostResolver.Subscritption,
+  },
 };

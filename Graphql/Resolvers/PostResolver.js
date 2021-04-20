@@ -14,7 +14,6 @@ module.exports = {
   Mutation: {
     async createPost(_, { body }, context) {
       const user = authChecker(context);
-      // add post here
       if (!body) {
         throw new Error("Post Body Must Not Be Empty");
       }
@@ -25,22 +24,31 @@ module.exports = {
         createdAt: new Date().toISOString(),
       });
       const post = await newPost.save();
+      context.pubsub.publish("REAL_TIME NEW_POST", {
+        realTimePost: post,
+      });
       return post;
     },
     async deletePost(_, { id }, context) {
       const user = authChecker(context);
-      // Delete post here
       try {
         const post = await Post.findById(id);
         if (user.username === post.username) {
           await post.delete();
-          return 'Post deleted successfully';
+       
+          return "Post deleted successfully";
         } else {
-          throw new AuthenticationError('Action not allowed');
+          throw new AuthenticationError("Action not allowed");
         }
       } catch (err) {
         throw new Error(err);
       }
+    },
+  },
+  Subscritption: {
+    realTimePost: {
+      subscribe: (_, __, { pubsub }) =>
+        pubsub.asyncIterator(["REAL_TIME NEW_POST"]),
     },
   },
 };
