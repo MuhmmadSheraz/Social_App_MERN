@@ -1,11 +1,11 @@
 import logo from "./logo.svg";
 import "./App.css";
-import Login from "./Views/Login";
 import "tailwindcss/tailwind.css";
+import MainRouter from "./Config/router";
 
 function App() {
   return (
-    <Login/>
+   <MainRouter/>
   );
 }
 
