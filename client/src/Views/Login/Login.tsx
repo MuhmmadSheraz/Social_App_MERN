@@ -1,11 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import "./index.css";
 import loginImage from "../../Assets/LoginBg.jpg";
 import FormikField from "../../Components/FormikField";
 import AuthButton from "../../Components/AuthButton";
 import { Link } from "react-router-dom";
 
+interface Props {
+  email: string;
+  password: string;
+}
+
 const Login = () => {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+
+  const loginUser = () => {
+    localStorage.setItem("email", email);
+    localStorage.setItem("password", password);
+  };
+
   return (
     <div className="mainLogin_Wrapper w-screen bg-gray-100 flex justify-center items-center">
       <div className="w-3/4 shadow-xl bg-white rounded-lg p-5 login_box flex justify-between">
@@ -18,9 +31,19 @@ const Login = () => {
             <h1 className="font-extrabold tracking-widest text-3xl text-left  ">
               Login
             </h1>
-            <FormikField placeHolder="Your Email" type={"email"} />
-            <FormikField placeHolder="Your Password" type={"password"} />
-            <AuthButton name="Login" />
+            <FormikField
+              placeHolder="Your Email"
+              type={"email"}
+              data={email}
+              setData={setEmail}
+            />
+            <FormikField
+              placeHolder="Your Password"
+              type={"password"}
+              data={password}
+              setData={setPassword}
+            />
+            <AuthButton name="Login" click={loginUser} />
           </div>
         </div>
       </div>
