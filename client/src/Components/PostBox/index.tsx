@@ -3,12 +3,21 @@ import { BsThreeDots } from "react-icons/bs";
 import { AiFillLike } from "react-icons/ai";
 import { BiMessageDots } from "react-icons/bi";
 import Comment from "../Comment";
+import { commentType, postType } from "../../Types/type";
 interface Props {
-  text: string;
-  likes: string;
-  comments: string;
+  postData: postType;
 }
-const PostBox = ({ text, likes, comments }: Props) => {
+const PostBox = ({ postData }: Props) => {
+  const {
+    body,
+    comments,
+    createdAt,
+    likesCount,
+    commentsCount,
+    id,
+    likes,
+    username,
+  } = postData;
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const like = () => {
     setIsLiked(!isLiked);
@@ -25,8 +34,8 @@ const PostBox = ({ text, likes, comments }: Props) => {
             alt="userprofile"
           />
           <div>
-            <p>Hamza</p>
-            <p>12/12/50 at 6.00PM</p>
+            <p>{username}</p>
+            <p>{createdAt}</p>
           </div>
         </div>
         <div>
@@ -34,20 +43,13 @@ const PostBox = ({ text, likes, comments }: Props) => {
         </div>
       </div>
       <hr className="mb-3 mt-2" />
-      <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus modi,
-        eveniet neque iste nisi delectus itaque adipisci aperiam id facere.
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus modi,
-        eveniet neque iste nisi delectus itaque adipisci aperiam id facere.
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus modi,
-        eveniet neque iste nisi delectus itaque adipisci aperiam id facere.
-      </p>
+      <p>{body}</p>
       <div className="flex justify-between items-center mt-5 mb-2 mx-8 ">
         <div className="flex justify-center items-center">
-          <span className="ml-2">21 Likes</span>
+          <span className="ml-2">{likesCount} Likes</span>
         </div>
         <div className="flex justify-center items-center">
-          <span className="ml-2">3 Comments</span>
+          <span className="ml-2">{commentsCount} Comments</span>
         </div>
       </div>
       <hr />
@@ -72,8 +74,9 @@ const PostBox = ({ text, likes, comments }: Props) => {
         />
       </div>
       <div>
-        <Comment />
-        <Comment />
+        {comments?.map((commentData: commentType, index) => {
+          return <Comment commentData1={commentData} key={commentData.id} />;
+        })}
       </div>
     </div>
   );
