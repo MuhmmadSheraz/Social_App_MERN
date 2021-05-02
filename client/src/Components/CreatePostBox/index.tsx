@@ -5,7 +5,7 @@ const index = () => {
     <textarea
       placeholder="Whats Going On?"
       rows={5}
-      className="border-gray-400 border  createPostBox w-2/3 px-10 py-5  shadow-md  rounded-lg outline-none text-lg  resize-none"
+      className="border-gray-400 border  createPostBox md:w-2/3 w-full px-10 py-5  shadow-md  rounded-lg outline-none text-lg  resize-none"
     />
   );
 };

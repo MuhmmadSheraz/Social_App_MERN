@@ -1,15 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
-import { AiOutlineLike } from "react-icons/ai";
+import { AiFillLike } from "react-icons/ai";
 import { BiMessageDots } from "react-icons/bi";
+import Comment from "../Comment";
 interface Props {
   text: string;
   likes: string;
   comments: string;
 }
 const PostBox = ({ text, likes, comments }: Props) => {
+  const [isLiked, setIsLiked] = useState<boolean>(false);
+  const like = () => {
+    setIsLiked(!isLiked);
+  };
   return (
-    <div className="p-2 shadow-2xl my-5 w-1/2 rounded-lg border-2 border-gray-400" >
+    <div className="p-2 shadow-xl my-5 lg:w-1/2 md:w-3/4 rounded-lg border-2 border-gray-400">
       <div className="flex justify-between  items-center">
         <div className="flex justify-center items-center">
           <img
@@ -19,7 +24,10 @@ const PostBox = ({ text, likes, comments }: Props) => {
             width="50"
             alt="userprofile"
           />
-          <p>Hamza</p>
+          <div>
+            <p>Hamza</p>
+            <p>12/12/50 at 6.00PM</p>
+          </div>
         </div>
         <div>
           <BsThreeDots size={25} />
@@ -42,21 +50,31 @@ const PostBox = ({ text, likes, comments }: Props) => {
           <span className="ml-2">3 Comments</span>
         </div>
       </div>
+      <hr />
       <div className="flex justify-between items-center mt-5 mb-2 mx-10">
-        <div className="flex justify-center items-center">
-          <AiOutlineLike /> <span className="ml-2">Like</span>
+        <div
+          className="flex justify-center items-center cursor-pointer"
+          onClick={like}
+        >
+          <AiFillLike fill={isLiked ? "#2078F4" : "gray"} className="mr-2" />
+          <span className={isLiked ? "colorBlue" : "gray"}>Like</span>
         </div>
         <div className="flex justify-center items-center">
           <BiMessageDots />
           <span className="ml-2">Comments</span>
         </div>
       </div>
-      {/* <p className="px-10 text-xl">{text}</p>
-      <div className="px-10 flex justify-between">
-        <div className="flex mt-10 ">
-          <p>Likes: {likes}</p> <p className="mx-5">Comments: {comments} </p>
-        </div>
-      </div> */}
+      <hr />
+      <div className="mt-2">
+        <input
+          placeholder="Write a Comment"
+          className="w-full rounded-md shadow-md py-2 px-4 border outline-none text-lg"
+        />
+      </div>
+      <div>
+        <Comment />
+        <Comment />
+      </div>
     </div>
   );
 };
