@@ -4,6 +4,8 @@ import loginImage from "../../Assets/LoginBg.jpg";
 import FormikField from "../../Components/FormikField";
 import AuthButton from "../../Components/AuthButton";
 import { Link, useHistory } from "react-router-dom";
+import { useMutation } from "@apollo/client";
+import { LOGIN_USER } from "./mutation";
 
 interface Props {
   email: string;
@@ -12,12 +14,25 @@ interface Props {
 
 const Login = () => {
   const [email, setEmail] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const history = useHistory();
+  const [addUser, { loading }] = useMutation(LOGIN_USER, {
+    update(_, result) {
+      console.log(result);
+    },
+    variables: {
+      username,
+      password,
+      email,
+    },
+  });
+
   const loginUser = () => {
+    addUser();
     localStorage.setItem("email", email);
     localStorage.setItem("password", password);
-    history.push("/home")
+    history.push("/home");
   };
 
   return (
@@ -32,6 +47,12 @@ const Login = () => {
             <h1 className="font-extrabold tracking-widest text-3xl text-left  ">
               Login
             </h1>
+            <FormikField
+              placeHolder="Your UserName"
+              type={"text"}
+              data={username}
+              setData={setUsername}
+            />
             <FormikField
               placeHolder="Your Email"
               type={"email"}

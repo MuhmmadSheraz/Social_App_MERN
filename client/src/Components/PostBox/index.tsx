@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import moment from "moment";
 import { BsThreeDots } from "react-icons/bs";
 import { AiFillLike } from "react-icons/ai";
 import { BiMessageDots } from "react-icons/bi";
@@ -35,7 +36,7 @@ const PostBox = ({ postData }: Props) => {
           />
           <div>
             <p>{username}</p>
-            <p>{createdAt}</p>
+            <p>{moment(createdAt).fromNow()}</p>
           </div>
         </div>
         <div>

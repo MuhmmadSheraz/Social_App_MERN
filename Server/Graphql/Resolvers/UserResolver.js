@@ -27,24 +27,25 @@ module.exports = {
       _,
       { registerInput: { username, password, confirmPassword, email } }
     ) {
+      console.log("Sign Up Calling...");
       if (password === confirmPassword) {
         console.log(true);
         console.log(email);
       }
 
-      const { errors, isValid } = UserValidation(
+      const { isValid, errors } = UserValidation(
         username,
-        email,
         password,
-        confirmPassword
+        confirmPassword,
+        email
       );
       if (!isValid) {
-        throw new UserInputError("Erorrs", { errors });
+        console.log(errors);
       }
       console.log("new UserName==>", username);
       const existingUser = await User.findOne({ username: username });
       if (existingUser) {
-        console.log(username)
+        console.log(username);
         throw new Error("User Name is Already Taken");
       }
       password = await bcrypt.hash(password, 12);
