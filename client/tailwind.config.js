@@ -16,13 +16,15 @@ module.exports = {
         secondary: "#282C34",
       },
       height: {
+        custom_vh1: "10vh",
         custom_vh2: "20vh",
         custom_vh3: "30vh",
         custom_vh5: "50vh",
         custom_vh6: "60vh",
         custom_vh7: "70vh",
         custom_vh8: "80vh",
-        custom_vh9: "99vh",
+        custom_vh9: "89vh",
+        custom_vh99: "99vh",
       },
       animation: {
         "spin-slow": "spin 20s linear infinite",

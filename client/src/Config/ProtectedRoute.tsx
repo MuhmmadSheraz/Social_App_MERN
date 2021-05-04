@@ -6,7 +6,7 @@ const ProtectedRoute = ({ component: Component, ...rest }: any) => {
     <Route
       {...rest}
       render={(props) =>
-        localStorage.getItem("email") ? (
+        localStorage.getItem("jwtToken") ? (
           <>
             <Component {...props} />
           </>

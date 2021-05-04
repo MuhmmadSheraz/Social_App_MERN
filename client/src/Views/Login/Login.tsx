@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import "./index.css";
 import loginImage from "../../Assets/LoginBg.jpg";
 import FormikField from "../../Components/FormikField";
@@ -6,20 +6,21 @@ import AuthButton from "../../Components/AuthButton";
 import { Link, useHistory } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import { LOGIN_USER } from "./mutation";
-
+import { GlobalContext } from "../../Context/GlobalState";
 interface Props {
   email: string;
   password: string;
 }
 
 const Login = () => {
-  const [email, setEmail] = useState<string>("");
-  const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
   const history = useHistory();
+  const { loginUser } = useContext(GlobalContext);
+  const [email, setEmail] = useState<string>("gul@gmail.com");
+  const [username, setUsername] = useState<string>("gul");
+  const [password, setPassword] = useState<string>("123456");
   const [addUser, { loading }] = useMutation(LOGIN_USER, {
-    update(_, result) {
-      console.log(result);
+    update(_, { data: { loginUser: userData } }) {
+      loginUser(userData);
     },
     variables: {
       username,
@@ -28,11 +29,9 @@ const Login = () => {
     },
   });
 
-  const loginUser = () => {
-    addUser();
-    localStorage.setItem("email", email);
-    localStorage.setItem("password", password);
-    history.push("/home");
+  const login_User = async () => {
+    await addUser();
+    history.push("/loading");
   };
 
   return (
@@ -47,6 +46,7 @@ const Login = () => {
             <h1 className="font-extrabold tracking-widest text-3xl text-left  ">
               Login
             </h1>
+
             <FormikField
               placeHolder="Your UserName"
               type={"text"}
@@ -65,7 +65,7 @@ const Login = () => {
               data={password}
               setData={setPassword}
             />
-            <AuthButton name="Login" click={loginUser} />
+            <AuthButton name="Login" click={login_User} />
           </div>
         </div>
       </div>

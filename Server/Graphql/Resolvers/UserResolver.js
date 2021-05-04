@@ -74,6 +74,7 @@ module.exports = {
         throw new UserInputError("Erorrs", { errors });
       }
       const res = await User.findOne({ username });
+      console.log(res)
       if (!res) {
         throw new UserInputError("No User Exists");
       }
@@ -83,6 +84,7 @@ module.exports = {
       }
       const token = generateToken(res);
       return {
+        username: res.username,
         email: res.email,
         createdAt: res.createdAt,
         id: res._id,
