@@ -11,9 +11,7 @@ const Home = () => {
   return (
     <div className="h-full  px-8 pt-5 pb-5 w-full">
       <CreatePostBox />
-      <button className="bg-blue-500 px-5 py-3 block rounded text-white text-lg">
-        Posta
-      </button>
+
       {data?.getAllPosts?.map((post: postType, index: string) => {
         return <PostBox key={index} postData={post} />;
       })}

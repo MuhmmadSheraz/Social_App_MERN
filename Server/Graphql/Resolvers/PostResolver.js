@@ -13,21 +13,24 @@ module.exports = {
   },
   Mutation: {
     async createPost(_, { body }, context) {
-      const user = authChecker(context);
-      if (!body) {
-        throw new Error("Post Body Must Not Be Empty");
+      try {
+        const user = authChecker(context);
+        console.log(user);
+        if (!body) {
+          throw new Error("Post Body Must Not Be Empty");
+        }
+        const newPost = new Post({
+          body,
+          user: user.id,
+          username: user.username,
+          createdAt: new Date().toISOString(),
+        });
+        const post = await newPost.save();
+
+        return post;
+      } catch (error) {
+        return error.message;
       }
-      const newPost = new Post({
-        body,
-        user: user.indexOf,
-        username: user.username,
-        createdAt: new Date().toISOString(),
-      });
-      const post = await newPost.save();
-      context.pubsub.publish("REAL_TIME NEW_POST", {
-        realTimePost: post,
-      });
-      return post;
     },
     async deletePost(_, { id }, context) {
       const user = authChecker(context);
@@ -35,7 +38,7 @@ module.exports = {
         const post = await Post.findById(id);
         if (user.username === post.username) {
           await post.delete();
-       
+
           return "Post deleted successfully";
         } else {
           throw new AuthenticationError("Action not allowed");
