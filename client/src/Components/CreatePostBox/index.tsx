@@ -17,6 +17,7 @@ const Index = () => {
     },
   });
   const createNewPost = async () => {
+    if (!body) return false;
     try {
       await createPost();
       setBody("");

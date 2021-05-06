@@ -6,6 +6,7 @@ const {
   UserLoginValidation,
 } = require("../../Utils/UserValidtaion");
 const { UserInputError } = require("apollo-server");
+const { validate } = require("../../Models/User");
 
 const generateToken = (res) => {
   return jwt.sign(
@@ -27,25 +28,18 @@ module.exports = {
       _,
       { registerInput: { username, password, confirmPassword, email } }
     ) {
-      console.log("Sign Up Calling...");
-      if (password === confirmPassword) {
-        console.log(true);
-        console.log(email);
-      }
-
-      const { isValid, errors } = UserValidation(
+      const { isValid, errorFound } = UserValidation(
         username,
         password,
         confirmPassword,
         email
       );
-      if (!isValid) {
-        console.log(errors);
+
+      if (errorFound !== 0) {
+        throw new Error(Object.values(isValid));
       }
-      console.log("new UserName==>", username);
       const existingUser = await User.findOne({ username: username });
       if (existingUser) {
-        console.log(username);
         throw new Error("User Name is Already Taken");
       }
       password = await bcrypt.hash(password, 12);
@@ -56,7 +50,6 @@ module.exports = {
         confirmPassword,
         createdAt: new Date().toISOString(),
       });
-      console.log("newUser===>", newUser);
       const res = await newUser.save();
       const token = generateToken(res);
       return {
@@ -65,22 +58,16 @@ module.exports = {
       };
     },
     async loginUser(_, { loginInput: { username, password, email } }) {
-      const { errors, isValid } = UserLoginValidation(
-        username,
-        password,
-        email
-      );
+      const { errors, isValid } = UserLoginValidation(username, password);
       if (!isValid) {
-        throw new UserInputError("Erorrs", { errors });
+        throw new Error(Object.values(errors));
       }
       const res = await User.findOne({ username });
-      console.log(res)
       if (!res) {
-        throw new UserInputError("No User Exists");
       }
       const matchPassword = await bcrypt.compare(password, res.password);
       if (!matchPassword) {
-        throw new Error("Incorect Password");
+        throw new Error("Invalid Password");
       }
       const token = generateToken(res);
       return {

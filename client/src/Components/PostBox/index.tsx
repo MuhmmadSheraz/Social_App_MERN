@@ -52,6 +52,7 @@ const PostBox = ({ postData }: Props) => {
     }
   };
   const handleComment = async (event: any) => {
+    if(!commentBody) return false
     try {
       if (event.key === "Enter") {
         await postComment();

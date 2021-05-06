@@ -6,6 +6,8 @@ import AuthButton from "../../Components/AuthButton";
 import { Link, useHistory } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import { LOGIN_USER } from "./mutation";
+import Swal from 'sweetalert2'
+
 import { GlobalContext } from "../../Context/GlobalState";
 interface Props {
   email: string;
@@ -15,23 +17,32 @@ interface Props {
 const Login = () => {
   const history = useHistory();
   const { loginUser } = useContext(GlobalContext);
-  const [email, setEmail] = useState<string>("gul@gmail.com");
   const [username, setUsername] = useState<string>("gul");
   const [password, setPassword] = useState<string>("123456");
-  const [addUser, { loading }] = useMutation(LOGIN_USER, {
+
+  const [addUser, { loading, error }] = useMutation(LOGIN_USER, {
     update(_, { data: { loginUser: userData } }) {
       loginUser(userData);
+      console.log(error);
     },
+
     variables: {
       username,
       password,
-      email,
+      email: "ell",
     },
   });
 
   const login_User = async () => {
-    await addUser();
-    history.push("/loading");
+    try {
+      await addUser();
+      history.push("/loading");
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        text: error.message,
+      });
+    }
   };
 
   useEffect(() => {
@@ -56,12 +67,12 @@ const Login = () => {
               data={username}
               setData={setUsername}
             />
-            <FormikField
+            {/* <FormikField
               placeHolder="Your Email"
               type={"email"}
               data={email}
               setData={setEmail}
-            />
+            /> */}
             <FormikField
               placeHolder="Your Password"
               type={"password"}

@@ -6,6 +6,8 @@ import AuthButton from "../../Components/AuthButton";
 import { Link, useHistory } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import { REGISTER_USER } from "./mutation";
+import Swal from 'sweetalert2'
+
 import { GlobalContext } from "../../Context/GlobalState";
 const SignUp = () => {
   const history = useHistory();
@@ -27,11 +29,15 @@ const SignUp = () => {
     },
   });
   const signUpUser = async () => {
+    console.log(password,confirmPassword)
     try {
       await addUser();
       history.push("/home");
     } catch (error) {
-      console.log(error.message);
+      Swal.fire({
+        icon: "error",
+        text: error.message,
+      });
     }
   };
   return (

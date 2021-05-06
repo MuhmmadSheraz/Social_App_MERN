@@ -1,38 +1,33 @@
 module.exports.UserValidation = (
   userName,
-  email,
   password,
-  confirmPassword
+  confirmPassword,
+  email
 ) => {
-  console.log(password, confirmPassword ,email,userName);
   const errors = {};
   if (!userName || !password || !confirmPassword || !email) {
     errors.userName = "Please Fill The Required Feild";
   }
   if (password !== confirmPassword) {
+    console.log(password, confirmPassword);
     errors.confirmPasswords = "Password Do not Match";
   }
   if (password.length < 6) {
     errors.password = "Password Must Be Greater Than 6";
   }
   return {
-    errors,
-    isValid: Object.keys(errors).length < 1,
+    errorFound: Object.keys(errors).length,
+    isValid: Object.values(errors),
   };
 };
 
-module.exports.UserLoginValidation = (
-  userName,
-  email,
-  password,
-  confirmPassword
-) => {
+module.exports.UserLoginValidation = (userName, password) => {
   const errors = {};
-  if (!userName || !password || !email) {
+  if (!userName || !password) {
     errors.userName = "Please Fill The Required Feild";
   }
   return {
     errors,
-    isValid: Object.keys(errors).length < 1,
+    isValid: Object.keys(errors).length < (1)[0],
   };
 };
