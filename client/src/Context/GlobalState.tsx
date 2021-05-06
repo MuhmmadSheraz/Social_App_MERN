@@ -21,6 +21,7 @@ export const GlobalProvider = ({ children }: any) => {
   const [state, dispatch] = useReducer(Reducer, initialState);
 
   const loginUser = (userData: any) => {
+    console.log(userData)
     localStorage.setItem("jwtToken", userData.token);
     return dispatch({
       type: "LOGIN_USER",

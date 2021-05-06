@@ -27,7 +27,7 @@ module.exports = {
       const user = checkAuth(context);
       if (user) {
         let post = await Post.findById(postId);
-        if (post.username === username) {
+        if (user.username === username) {
           console.log(typeof commentId);
           let updatedComments = post.comments.filter(
             (comment) => comment._id.toString() !== commentId

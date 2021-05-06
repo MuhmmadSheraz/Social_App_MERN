@@ -28,8 +28,8 @@ const SignUp = () => {
   });
   const signUpUser = async () => {
     try {
-      addUser();
-      history.push("/loading");
+      await addUser();
+      history.push("/home");
     } catch (error) {
       console.log(error.message);
     }
