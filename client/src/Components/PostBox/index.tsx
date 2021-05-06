@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import moment from "moment";
 import { BsThreeDots } from "react-icons/bs";
 import { AiFillLike } from "react-icons/ai";
 import { BiMessageDots } from "react-icons/bi";
+import { GlobalContext } from "../../Context/GlobalState";
 import Comment from "../Comment";
 import { commentType, postType } from "../../Types/type";
+import { useMutation } from "@apollo/client";
+import { LIKE_POST } from "./mutation";
+import CustomModal from "../CustomModal/Index";
 interface Props {
   postData: postType;
 }
@@ -19,9 +23,29 @@ const PostBox = ({ postData }: Props) => {
     likes,
     username,
   } = postData;
+  const {
+    user: { username: name },
+  } = useContext(GlobalContext);
   const [isLiked, setIsLiked] = useState<boolean>(false);
-  const like = () => {
-    setIsLiked(!isLiked);
+  const [openModal, setOpenModal] = useState<boolean>(false);
+
+  const [likePost, { loading }] = useMutation(LIKE_POST, {
+    variables: { postId: id, username: name },
+  });
+
+  useEffect(() => {
+    likes.some((x) => {
+      return x.username === name ? setIsLiked(true) : setIsLiked(false);
+    });
+  }, [likesCount, likes]);
+
+  const like = async () => {
+    try {
+      await likePost();
+      setIsLiked(!isLiked);
+    } catch (error) {
+      return error.message;
+    }
   };
   return (
     <div className="p-2 shadow-xl my-5 lg:w-1/2 md:w-3/4 rounded-lg border-2 border-gray-400">
@@ -39,9 +63,15 @@ const PostBox = ({ postData }: Props) => {
             <p>{moment(createdAt).fromNow()}</p>
           </div>
         </div>
-        <div>
-          <BsThreeDots size={25} />
-        </div>
+        {username === name && (
+          <div>
+            <BsThreeDots
+              size={25}
+              onClick={() => setOpenModal(true)}
+              className="cursor-pointer"
+            />
+          </div>
+        )}
       </div>
       <hr className="mb-3 mt-2" />
       <p>{body}</p>
@@ -79,6 +109,7 @@ const PostBox = ({ postData }: Props) => {
           return <Comment commentData1={commentData} key={commentData.id} />;
         })}
       </div>
+      {<CustomModal openModal={openModal} setOpenModal={setOpenModal} id={id} />}
     </div>
   );
 };

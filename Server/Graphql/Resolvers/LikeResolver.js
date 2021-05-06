@@ -4,6 +4,7 @@ const checkAuth = require("../../Utils/checkAuth");
 module.exports = {
   Mutation: {
     async likeToggle(_, { username, postId }, context) {
+      console.log("Like hit")
       const user = checkAuth(context);
       if (user) {
         console.log(user.username);
