@@ -36,7 +36,7 @@ const Index = () => {
         {localStorage.getItem("jwtToken") ? (
           <h4
             className="sm:px-2 sm:text-xs  md:text-lg md:mx-5 cursor-pointer"
-            onClick={logout}
+            onClick={() => logout()}
           >
             Logout
           </h4>

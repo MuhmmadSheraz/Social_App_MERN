@@ -20,18 +20,11 @@ export default function MainRouter() {
           <Loading />
         </Route>
         <Route exact path="/">
-          {localStorage.getItem("jwtToken") ? (
-            <Redirect to="/home" />
-          ) : (
-            <Login />
-          )}
+        
+          <Login />
         </Route>
         <Route exact path="/sign-up">
-          {localStorage.getItem("jwtToken") ? (
-            <Redirect to="/home" />
-          ) : (
-            <SignUp />
-          )}
+          <SignUp />
         </Route>
         <Route exact path="/home">
           <ProtectedRoute exact path="/home" component={Home} />

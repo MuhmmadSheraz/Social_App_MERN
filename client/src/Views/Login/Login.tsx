@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./index.css";
 import loginImage from "../../Assets/LoginBg.jpg";
 import FormikField from "../../Components/FormikField";
@@ -34,6 +34,9 @@ const Login = () => {
     history.push("/loading");
   };
 
+  useEffect(() => {
+    localStorage.getItem("jwtToken") && history.push("/home");
+  }, []);
   return (
     <div className="mainLogin_Wrapper w-full h-full bg-gray-100 flex justify-center items-center">
       <div className="w-3/4 shadow-xl bg-white rounded-lg p-5 login_box flex justify-between">
