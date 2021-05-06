@@ -6,9 +6,10 @@ import { BiMessageDots } from "react-icons/bi";
 import { GlobalContext } from "../../Context/GlobalState";
 import Comment from "../Comment";
 import { commentType, postType } from "../../Types/type";
-import { useMutation } from "@apollo/client";
-import { LIKE_POST } from "./mutation";
+import { from, useMutation } from "@apollo/client";
+import { LIKE_POST, COMMENT_POST } from "./mutation";
 import CustomModal from "../CustomModal/Index";
+import { FECH_POSTS_QUERY } from "../../Views/Home/query";
 interface Props {
   postData: postType;
 }
@@ -28,16 +29,19 @@ const PostBox = ({ postData }: Props) => {
   } = useContext(GlobalContext);
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [openModal, setOpenModal] = useState<boolean>(false);
-
-  const [likePost, { loading }] = useMutation(LIKE_POST, {
+  const [commentBody, setCommentBody] = useState<string>("");
+  const [likePost, {}] = useMutation(LIKE_POST, {
     variables: { postId: id, username: name },
+  });
+  const [postComment, {}] = useMutation(COMMENT_POST, {
+    variables: { postId: id, body: commentBody },
   });
 
   useEffect(() => {
     likes.some((x) => {
       return x.username === name ? setIsLiked(true) : setIsLiked(false);
     });
-  }, [likesCount, likes]);
+  }, [likesCount, likes, commentsCount]);
 
   const like = async () => {
     try {
@@ -47,6 +51,17 @@ const PostBox = ({ postData }: Props) => {
       return error.message;
     }
   };
+  const handleComment = async (event: any) => {
+    try {
+      if (event.key === "Enter") {
+        await postComment();
+        setCommentBody("");
+      }
+    } catch (error) {
+      return error.message;
+    }
+  };
+
   return (
     <div className="p-2 shadow-xl my-5 lg:w-1/2 md:w-3/4 rounded-lg border-2 border-gray-400">
       <div className="flex justify-between  items-center">
@@ -101,15 +116,30 @@ const PostBox = ({ postData }: Props) => {
       <div className="mt-2">
         <input
           placeholder="Write a Comment"
+          value={commentBody}
           className="w-full rounded-md shadow-md py-2 px-4 border outline-none text-lg"
+          onChange={(e) => setCommentBody(e.target.value)}
+          onKeyPress={handleComment}
         />
       </div>
       <div>
         {comments?.map((commentData: commentType, index) => {
-          return <Comment commentData1={commentData} key={commentData.id} />;
+          return (
+            <Comment
+              commentData1={commentData}
+              postId={id}
+              key={commentData.id}
+            />
+          );
         })}
       </div>
-      {<CustomModal openModal={openModal} setOpenModal={setOpenModal} id={id} />}
+      {
+        <CustomModal
+          openModal={openModal}
+          setOpenModal={setOpenModal}
+          id={id}
+        />
+      }
     </div>
   );
 };

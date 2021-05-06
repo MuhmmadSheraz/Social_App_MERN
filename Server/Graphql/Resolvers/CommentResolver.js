@@ -35,7 +35,7 @@ module.exports = {
           console.log(updatedComments);
           post.comments = updatedComments;
           post.save();
-          return "Post Deleted Successfully";
+          return post;
         }
       } else {
         throw new Error("You Are Not Authorized To Perform Action");

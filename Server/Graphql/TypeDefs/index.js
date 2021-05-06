@@ -53,7 +53,7 @@ module.exports = gql`
       postId: String!
       commentId: String!
       username: String!
-    ): String!
+    ): Post!
     likeToggle(postId: String!, username: String!): Post!
   }
   type Subscription {

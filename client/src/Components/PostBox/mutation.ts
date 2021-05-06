@@ -17,4 +17,37 @@ const DELETE_POST = gql`
     deletePost(id: $id)
   }
 `;
-export { LIKE_POST, DELETE_POST };
+const DELETE_COMMENT = gql`
+  mutation deleteComment(
+    $postId: String!
+    $commentId: String!
+    $username: String!
+  ) {
+    deleteComment(postId: $postId, commentId: $commentId, username: $username) {
+      id
+      comments {
+        id
+        body
+        createdAt
+        username
+      }
+      commentsCount
+    }
+  }
+`;
+
+const COMMENT_POST = gql`
+  mutation addComment($postId: ID!, $body: String!) {
+    addComment(postId: $postId, body: $body) {
+      id
+      comments {
+        id
+        body
+        createdAt
+        username
+      }
+      commentsCount
+    }
+  }
+`;
+export { LIKE_POST, DELETE_POST, COMMENT_POST, DELETE_COMMENT };
